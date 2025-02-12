@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # URL da API hospedada (substitua pela URL correta do Flask)
-API_URL = "https://SEU-API-ENDPOINT-HOST/predict"
+API_URL = "https://https://toxic-comments-api-vertex-678895434688.us-central1.run.app/predict"
 
 def prever_toxicidade(texto):
     """Envia um texto para a API Flask e retorna as previsões de toxicidade."""
