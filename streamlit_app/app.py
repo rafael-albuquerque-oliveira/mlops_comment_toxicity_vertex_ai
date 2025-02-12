@@ -3,12 +3,12 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 
-api_url = "https://toxic-comments-api-678895434688.us-central1.run.app/predict"
+# URL da API hospedada (substitua pela URL correta do Flask)
+API_URL = "https://SEU-API-ENDPOINT-HOST/predict"
 
-# Função para enviar texto para a API Flask e obter previsões
 def prever_toxicidade(texto):
-    """Envia um texto para a API e retorna as previsões de toxicidade."""
-    resposta = requests.post(api_url, json={"text": texto})
+    """Envia um texto para a API Flask e retorna as previsões de toxicidade."""
+    resposta = requests.post(API_URL, json={"text": texto})
 
     if resposta.status_code == 200:
         return resposta.json()
@@ -31,13 +31,12 @@ if st.button("📊 Analisar"):
             st.error(resultado["erro"])
         else:
             # Exibir textos original e traduzido
-            #st.subheader("📄 Resultados da Análise")
-            #st.markdown(f"**🗣️ Texto Original:** {resultado['original_text']}")
-            #st.markdown(f"**🌎 Tradução:** {resultado['translated_text']}")
+            st.markdown("### 📄 Resultados da Análise")
+            st.markdown(f"**🗣️ Texto Original:** {resultado['original_text']}")
+            st.markdown(f"**🌎 Tradução:** {resultado['translated_text']}")
 
             # Obter previsões e arredondar valores
             previsoes = resultado["prediction"]
-            # Renomear as chaves conforme solicitado
             mapeamento_nomes = {
                 "identity_hate": "Ódio Identitário",
                 "insult": "Insulto",
@@ -50,11 +49,11 @@ if st.button("📊 Analisar"):
             previsoes_renomeadas = {mapeamento_nomes.get(k, k): round(v, 2) for k, v in previsoes.items()}
 
             # Exibir tabela de previsões
-            #st.markdown("### 🔢 Níveis de Toxicidade")
+            st.markdown("### 🔢 Níveis de Toxicidade")
             df = pd.DataFrame.from_dict(previsoes_renomeadas, orient="index", columns=["Probabilidade"])
             df.reset_index(inplace=True)
             df.columns = ["Categoria", "Probabilidade"]
-            #st.dataframe(df)
+            st.dataframe(df)
 
             # Criar gráfico de barras
             st.markdown("### 📊 Visualização Gráfica")
@@ -67,8 +66,3 @@ if st.button("📊 Analisar"):
             st.pyplot(fig)
     else:
         st.warning("⚠️ Por favor, insira um comentário antes de analisar.")
-
-
-if __name__ == "__main__":
-    import os
-    os.system("streamlit run app.py --server.port=8501 --server.address=0.0.0.0")
